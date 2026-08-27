@@ -199,6 +199,14 @@ PY
 
 ensure_python() {
     local candidates=(python3 python)
+    # On macOS, Homebrew installs Python as version-suffixed binaries
+    # (e.g. python3.14) and does not override the system python3 symlink,
+    # so the default candidates miss it.  Check versioned names too.
+    if [[ "$(detect_os)" == "macos" ]]; then
+        for ver in 14 13 12 11 10; do
+            candidates+=("python3.$ver")
+        done
+    fi
     local chosen=""
     local version_output=""
 
